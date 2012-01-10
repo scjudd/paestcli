@@ -1,0 +1,52 @@
+#!/usr/bin/env python2
+
+import urllib
+import urllib2
+import cookielib
+import re
+
+cookiejar = cookielib.CookieJar()
+opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookiejar))
+urllib2.install_opener(opener)
+
+def csrf_token():
+    for line in urllib2.urlopen('http://pae.st').read().split('\n'):
+        if "csrfmiddlewaretoken" in line:
+            return re.search(r"value='(.*)'", line).group(1)
+
+def paest(fileObj, lexer='', expires='', locked=False, url=None, raw=False):
+
+    data = {
+        'code': fileObj.read(),
+        'lexer': lexer,
+        'expires_options': expires,
+        'locked': locked,
+        'csrfmiddlewaretoken': csrf_token(),
+    }
+
+    if url:
+        data['url'] = url
+
+    response = urllib2.urlopen('http://pae.st', urllib.urlencode(data))
+
+    if raw:
+        return response.geturl()+'raw/'
+
+    return response.geturl()
+
+if __name__ == '__main__':
+    import sys
+    import argparse
+
+    LEXER_CHOICES = ["bash", "brainfuck", "c", "clojure", "cpp", "csharp", "css", "d", "erlang", "go", "haskell", "html", "html+php", "java", "js", "lua", "ocaml", "perl", "python", "ruby", "scala", "scheme", "smalltalk", "sql", "text", "xml"]
+    EXPIRATION_CHOICES = ['60', '3600', '604800', '2592000']
+
+    parser = argparse.ArgumentParser(description='pae.st: A simple pastebin targeted at hardcore programmers.')
+    parser.add_argument('-f', dest='fileObj', metavar='FILE', type=argparse.FileType('r'), default=sys.stdin, help='specify the file to paest')
+    parser.add_argument('-u', dest='url', help='the four-letter \'id\' of a paest to update. i.e. \'ZnfK\'')
+    parser.add_argument('-l', dest='lexer', default='', choices=LEXER_CHOICES, help='specify the lexer (for syntax highlighting)')
+    parser.add_argument('-e', dest='expires', default='', choices=EXPIRATION_CHOICES, help='specify the lifespan of the paest (in seconds)')
+    parser.add_argument('-L', dest='locked', default=False, action='store_true', help='prevent editing this paest?')
+    parser.add_argument('-r', dest='raw', default=False, action='store_true', help='return the \'raw\' url?')
+
+    print paest(**vars(parser.parse_args()))
