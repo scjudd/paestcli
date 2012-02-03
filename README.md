@@ -18,12 +18,12 @@ This project provides a command-line interface to [pae.st](http://pae.st).
 
 ### submit a new snippet (explicitly specifying the lexer as python):
 ```bash
-paest -f test.py -l python
+paest test.py -l python
 ```
 
 ### update an existing snippet (i.e., [ZnfK](http://pae.st/ZnfK)):
 ```bash
-paest -f test.py -u ZnfK
+paest test.py -u ZnfK
 ```
 
 ### piping command output to a new snippet, locking it, and returning the 'raw' url:
