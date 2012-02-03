@@ -40,7 +40,7 @@ if __name__ == '__main__':
     EXPIRATION_CHOICES = ['60', '3600', '604800', '2592000']
 
     parser = argparse.ArgumentParser(description='pae.st: A simple pastebin targeted at hardcore programmers.')
-    parser.add_argument('-f', dest='fileObj', metavar='FILE', type=argparse.FileType('r'), default=sys.stdin, help='specify the file to paest')
+    parser.add_argument(dest='fileObj', metavar='FILE', nargs='?', type=argparse.FileType('r'), default=sys.stdin, help='specify the file to paest')
     parser.add_argument('-u', dest='url', help='the four-letter \'id\' of a snippet to update. i.e. \'ZnfK\'')
     parser.add_argument('-l', dest='lexer', default='', choices=LEXER_CHOICES, help='specify the lexer (for syntax highlighting)')
     parser.add_argument('-e', dest='expires', default='', choices=EXPIRATION_CHOICES, help='specify the lifespan of the snippet (in seconds)')
