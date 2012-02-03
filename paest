@@ -44,7 +44,7 @@ if __name__ == '__main__':
     parser.add_argument('-u', dest='url', help='the four-letter \'id\' of a snippet to update. i.e. \'ZnfK\'')
     parser.add_argument('-l', dest='lexer', default='', choices=LEXER_CHOICES, help='specify the lexer (for syntax highlighting)')
     parser.add_argument('-e', dest='expires', default='', choices=EXPIRATION_CHOICES, help='specify the lifespan of the snippet (in seconds)')
-    parser.add_argument('-L', dest='locked', default=False, action='store_true', help='prevent editing this snippet?')
-    parser.add_argument('-r', dest='raw', default=False, action='store_true', help='return the \'raw\' url?')
+    parser.add_argument('-L', dest='locked', action='store_true', help='prevent editing this snippet?')
+    parser.add_argument('-r', dest='raw', action='store_true', help='return the \'raw\' url?')
 
     print paest(**vars(parser.parse_args()))
